@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Получаем код
+      - uses: actions/checkout@v4
+
+      # 2. Устанавливаем PHP
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      # 3. Кэшируем зависимости
+      - name: Cache composer
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      # 4. Устанавливаем зависимости
+      - run: composer install --no-progress --prefer-dist
+
+      # 5. Проверка кода (lint)
+      - name: Code style
+        run: vendor/bin/phpcs
+
+      # 6. Статический анализ
+      - name: Static analysis
+        run: vendor/bin/phpstan || true
+
+      # 7. Запуск тестов
+      - name: Run tests
+        run: php artisan test
