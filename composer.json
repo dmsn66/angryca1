@@ -1,0 +1,10 @@
+{
+    "require": {
+        "aws/aws-sdk-php": "^3.376"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^4.0",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^13.1"
+    }
+}
